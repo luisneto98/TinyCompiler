@@ -20,7 +20,7 @@ static TreeNode * repeat_stmt(void);
 static TreeNode * assign_stmt(void);
 static TreeNode * read_stmt(void);
 static TreeNode * write_stmt(void);
-static TreeNode * exp(void);
+static TreeNode * expr(void);
 static TreeNode * simple_exp(void);
 static TreeNode * term(void);
 static TreeNode * factor(void);
@@ -43,7 +43,7 @@ static void match(TokenType expected)
 TreeNode * stmt_sequence(void)
 { TreeNode * t = statement();
   TreeNode * p = t;
-  while ((token!=ENDFILE) && (token!=END) &&
+  while ((token!=ENDFILE) && (token!=ENDIF) &&
          (token!=ELSE) && (token!=UNTIL) && (token!=CASE) && (token!=ENDSWITCH))
   { TreeNode * q;
     match(SEMI);
@@ -78,14 +78,14 @@ TreeNode * statement(void)
 TreeNode * if_stmt(void)
 { TreeNode * t = newStmtNode(IfK);
   match(IF);
-  if (t!=NULL) t->child[0] = exp();
+  if (t!=NULL) t->child[0] = expr();
   match(THEN);
   if (t!=NULL) t->child[1] = stmt_sequence();
   if (token==ELSE) {
     match(ELSE);
     if (t!=NULL) t->child[2] = stmt_sequence();
   }
-  match(END);
+  match(ENDIF);
   return t;
 }
 
@@ -94,7 +94,7 @@ TreeNode * repeat_stmt(void)
   match(REPEAT);
   if (t!=NULL) t->child[0] = stmt_sequence();
   match(UNTIL);
-  if (t!=NULL) t->child[1] = exp();
+  if (t!=NULL) t->child[1] = expr();
   return t;
 }
 
@@ -104,7 +104,7 @@ TreeNode * assign_stmt(void)
     t->attr.name = copyString(tokenString);
   match(ID);
   match(ASSIGN);
-  if (t!=NULL) t->child[0] = exp();
+  if (t!=NULL) t->child[0] = expr();
   return t;
 }
 
@@ -120,12 +120,12 @@ TreeNode * read_stmt(void)
 TreeNode * write_stmt(void)
 { TreeNode * t = newStmtNode(WriteK);
   match(WRITE);
-  if (t!=NULL) t->child[0] = exp();
+  if (t!=NULL) t->child[0] = expr();
   return t;
 }
 
 
-TreeNode * exp(void)
+TreeNode * expr(void)
 { TreeNode * t = simple_exp();
   if ((token==LT)||(token==EQ)) {
     TreeNode * p = newExpNode(OpK);
@@ -188,7 +188,7 @@ TreeNode * factor(void)
       break;
     case LPAREN :
       match(LPAREN);
-      t = exp();
+      t = expr();
       match(RPAREN);
       break;
     default:

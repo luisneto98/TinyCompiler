@@ -45,7 +45,7 @@
 #endif
 
 /* MAXRESERVED = the number of reserved words */
-#define MAXRESERVED 8
+#define MAXRESERVED 10
 
 /* Yacc/Bison generates its own integer values
  * for tokens
