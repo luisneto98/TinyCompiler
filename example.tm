@@ -6,7 +6,7 @@
 * End of standard prelude.
   2:     IN  0,0,0 	read integer value
   3:     ST  0,0(5) 	read: store value
-* -> if
+* -> while
 * -> Op
 * -> Const
   4:    LDC  0,0(0) 	load const
@@ -22,7 +22,7 @@
  11:    LDA  7,1(7) 	unconditional jmp
  12:    LDC  0,1(0) 	true case
 * <- Op
-* if: jump to else belongs here
+* while: jump to endwhile belongs here
 * -> assign
 * -> Const
  14:    LDC  0,1(0) 	load const
@@ -80,9 +80,7 @@
  38:     LD  0,1(5) 	load id value
 * <- Id
  39:    OUT  0,0,0 	write ac
-* if: jump to end belongs here
- 13:    JEQ  0,27(7) 	if: jmp to else
- 40:    LDA  7,0(7) 	jmp to end
-* <- if
+  0:    LDA  7,39(7) 	jmp to endwhile
+* <- while
 * End of execution.
- 41:   HALT  0,0,0 	
+ 40:   HALT  0,0,0 	

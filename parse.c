@@ -16,6 +16,7 @@ static TokenType token; /* holds current token */
 static TreeNode * stmt_sequence(void);
 static TreeNode * statement(void);
 static TreeNode * if_stmt(void);
+static TreeNode * while_stmt(void);
 static TreeNode * repeat_stmt(void);
 static TreeNode * assign_stmt(void);
 static TreeNode * read_stmt(void);
@@ -43,7 +44,7 @@ static void match(TokenType expected)
 TreeNode * stmt_sequence(void)
 { TreeNode * t = statement();
   TreeNode * p = t;
-  while ((token!=ENDFILE) && (token!=ENDIF) &&
+  while ((token!=ENDFILE) && (token!=ENDIF) && (token!=ENDWHILE) &&
          (token!=ELSE) && (token!=UNTIL) && (token!=CASE) && (token!=ENDSWITCH))
   { TreeNode * q;
     match(SEMI);
@@ -63,6 +64,7 @@ TreeNode * statement(void)
 { TreeNode * t = NULL;
   switch (token) {
     case IF : t = if_stmt(); break;
+    case WHILE : t = while_stmt(); break;
     case REPEAT : t = repeat_stmt(); break;
     case ID : t = assign_stmt(); break;
     case READ : t = read_stmt(); break;
@@ -86,6 +88,16 @@ TreeNode * if_stmt(void)
     if (t!=NULL) t->child[2] = stmt_sequence();
   }
   match(ENDIF);
+  return t;
+}
+
+TreeNode * while_stmt(void)
+{ TreeNode * t = newStmtNode(whileK);
+  match(WHILE);
+  if (t!=NULL) t->child[0] = expr();
+  match(THEN);
+  if (t!=NULL) t->child[1] = stmt_sequence();
+  match(ENDWHILE);
   return t;
 }
 

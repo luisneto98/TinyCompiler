@@ -129,6 +129,10 @@ static void checkNode(TreeNode * t)
           if (t->child[0]->type == Integer)
             typeError(t->child[0],"if test is not Boolean");
           break;
+	case whileK:
+          if (t->child[0]->type == Integer)
+            typeError(t->child[0],"while test is not Boolean");
+          break;
         case AssignK:
           if (t->child[0]->type != Integer)
             typeError(t->child[0],"assignment of non-integer value");

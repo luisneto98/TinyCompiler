@@ -75,7 +75,7 @@ static void genStmt( TreeNode * tree)
          /* recurse on then part */
          cGen(p2);
          savedLoc2 = emitSkip(1) ;
-         emitComment("if: jump to end belongs here");
+         emitComment("if: jump to endif belongs here");
          currentLoc = emitSkip(0) ;
          emitBackup(savedLoc1) ;
          emitRM_Abs("JEQ",ac,currentLoc,"if: jmp to else");
@@ -84,9 +84,24 @@ static void genStmt( TreeNode * tree)
          cGen(p3);
          currentLoc = emitSkip(0) ;
          emitBackup(savedLoc2) ;
-         emitRM_Abs("LDA",pc,currentLoc,"jmp to end") ;
+         emitRM_Abs("LDA",pc,currentLoc,"jmp to endif") ;
          emitRestore() ;
          if (TraceCode)  emitComment("<- if") ;
+         break; /* if_k */
+      case whileK :
+         if (TraceCode) emitComment("-> while") ;
+         p1 = tree->child[0] ;
+         p2 = tree->child[1] ;
+         /* generate code for test expression */
+         cGen(p1);
+         savedLoc1 = emitSkip(1) ;
+         emitComment("while: jump to endwhile belongs here");
+         cGen(p2);
+         currentLoc = emitSkip(0) ;
+         emitBackup(savedLoc2) ;
+         emitRM_Abs("LDA",pc,currentLoc,"jmp to endwhile") ;
+         emitRestore() ;
+         if (TraceCode)  emitComment("<- while") ;
          break; /* if_k */
 
       case RepeatK:
