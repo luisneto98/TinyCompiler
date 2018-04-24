@@ -94,7 +94,16 @@ TokenType getToken(void)
            state = INNUM;
          else if (isalpha(c))
            state = INID;
-         else if (c == ':')
+	 else if (c == '_'){
+		 int aux = getNextChar();
+		 if(isalpha(aux) || isdigit(aux)){
+		 	 state = INID; 
+		 }else{
+			 state = DONE;
+		 	 ungetNextChar();
+    		 }
+           
+         }else if (c == ':')
            state = INASSIGN;
          else if ((c == ' ') || (c == '\t') || (c == '\n'))
            save = FALSE;
@@ -171,7 +180,7 @@ TokenType getToken(void)
          }
          break;
        case INID:
-         if (!isalpha(c))
+         if (! (isalpha(c) || isdigit(c) || c == '_') )
          { /* backup in the input */
            ungetNextChar();
            save = FALSE;
