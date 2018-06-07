@@ -2,11 +2,11 @@
   in TINY language -
   computes factorial
 }
-read a_x; { input an integer }
+read _x; { input an integer }
 
-while 0 < x then { don't compute if x <= 0 }
+while (0 < x) { don't compute if x <= 0 }
   
-fact := 1;
+  fact := 1;
   repeat
     fact := fact * x;
     x := x - 1

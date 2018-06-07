@@ -97,7 +97,8 @@ TokenType getToken(void)
 	 else if (c == '_'){
 		 int aux = getNextChar();
 		 if(isalpha(aux) || isdigit(aux)){
-		 	 state = INID; 
+			ungetNextChar();		 	 
+			state = INID; 
 		 }else{
 			 state = DONE;
 		 	 ungetNextChar();
