@@ -3,3 +3,4 @@ rm main.o
 gcc -o main main.c *.o
 sudo chmod +x main
 ./main example.tny
+./tm example.tm

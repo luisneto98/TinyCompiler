@@ -89,20 +89,18 @@ static void genStmt( TreeNode * tree)
          if (TraceCode)  emitComment("<- if") ;
          break; /* if_k */
       case whileK :
-         if (TraceCode) emitComment("-> while") ;
-         p1 = tree->child[0] ;
-         p2 = tree->child[1] ;
-         /* generate code for test expression */
-         cGen(p1);
-         savedLoc1 = emitSkip(1) ;
-         emitComment("while: jump to endwhile belongs here");
-         cGen(p2);
-         currentLoc = emitSkip(0) ;
-         emitBackup(savedLoc2) ;
-         emitRM_Abs("LDA",pc,currentLoc,"jmp to endwhile") ;
-         emitRestore() ;
-         if (TraceCode)  emitComment("<- while") ;
-         break; /* if_k */
+	if (TraceCode)
+		emitComment("-> while");
+		p1 = tree->child[0]; //Test
+		p2 = tree->child[1]; //Actions
+		savedLoc1 = emitSkip(0);
+		emitComment("while: jmp after body comes back here");
+		cGen(p2);
+		cGen(p1);
+		emitRM_Abs("JNE", ac, savedLoc1, "while: jmp back to body");
+		if (TraceCode)
+			emitComment("<- while");
+	break;
 
       case RepeatK:
          if (TraceCode) emitComment("-> repeat") ;
